@@ -1,10 +1,10 @@
-defmodule Balenax.Mixfile do
+defmodule Echsx.Mixfile do
   use Mix.Project
 
   def project do
     [
-      app: :balenax,
-      name: "balenax",
+      app: :echsx,
+      name: "echsx",
       source_url: "https://github.com/Sebi55/echsx",
       version: "0.0.1",
       elixir: "~> 1.6",

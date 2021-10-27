@@ -1,4 +1,4 @@
-# Balenax
+# Echsx
 
 [![Hex.pm](https://img.shields.io/badge/Hex-v2.1.1-green.svg)](https://hexdocs.pm/echsx)
 

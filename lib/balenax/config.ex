@@ -1,4 +1,4 @@
-defmodule Balenax.Config do
+defmodule Echsx.Config do
   @moduledoc """
   Provides application/system environment variable lookup at runtime
   """

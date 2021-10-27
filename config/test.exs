@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :balenax,
-  http_client: Balenax.Http.MockClient,
+config :echsx,
+  http_client: Echsx.Http.MockClient,
   username: "test_user",
   password: "test_password"
