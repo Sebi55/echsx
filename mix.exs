@@ -32,7 +32,7 @@ defmodule Echsx.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpoison, :eex]]
+    [applications: [:logger, :httpoison, :eex, :xml_builder]]
   end
 
   defp description do
