@@ -32,8 +32,8 @@ defmodule Echsx.Http do
     end
   end
 
-  @spec get_charge_point_list(timeout: integer) :: {:ok, map} | {:error, [atom]}
-  def get_charge_point_list(options \\ []) do
+  @spec get_charge_point_list_request(timeout: integer) :: {:ok, map} | {:error, [atom]}
+  def get_charge_point_list_request(options \\ []) do
     timeout = options[:timeout] || Config.get_env(:echsx, :timeout, 5000)
     url = Config.get_env(:echsx, :api_url, @default_api_url)
     headers = @headers
@@ -60,8 +60,8 @@ defmodule Echsx.Http do
     handle_result result
   end
 
-  @spec get_charge_point_status(timeout: integer) :: {:ok, map} | {:error, [atom]}
-  def get_charge_point_status(options \\ []) do
+  @spec get_charge_point_status_request(timeout: integer) :: {:ok, map} | {:error, [atom]}
+  def get_charge_point_status_request(options \\ []) do
     timeout = options[:timeout] || Config.get_env(:echsx, :timeout, 5000)
     url = Config.get_env(:echsx, :api_url, @default_api_url)
     headers = @headers

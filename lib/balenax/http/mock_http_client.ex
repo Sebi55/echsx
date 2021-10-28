@@ -5,14 +5,14 @@ defmodule Echsx.Http.MockClient do
   alias Echsx.Http
 
   # every other match is a pass through to the real client
-  def get_charge_point_list(options) do
-    send(self(), {:get_charge_point_list, options})
-    Http.get_charge_point_list(options)
+  def get_charge_point_list_request(options) do
+    send(self(), {:get_charge_point_list_request, options})
+    Http.get_charge_point_list_request(options)
   end
 
   # every other match is a pass through to the real client
-  def get_charge_point_status(options) do
-    send(self(), {:get_charge_point_status, options})
-    Http.get_charge_point_status(options)
+  def get_charge_point_status_request(options) do
+    send(self(), {:get_charge_point_status_request, options})
+    Http.get_charge_point_status_request(options)
   end
 end

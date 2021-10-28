@@ -7,9 +7,14 @@ defmodule Echsx do
 
   @http_client Application.get_env(:echsx, :http_client, Http)
 
-  def get_charge_point_list_request(options \\ []) do
+  def get_charge_point_list(options \\ []) do
+    @http_client.get_charge_point_list_request(
+      Keyword.take(options, [:timeout])
+    )
+  end
 
-    @http_client.get_charge_point_list(
+  def get_charge_point_status(options \\ []) do
+    @http_client.get_charge_point_status_request(
       Keyword.take(options, [:timeout])
     )
   end
