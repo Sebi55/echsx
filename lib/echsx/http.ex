@@ -13,7 +13,7 @@ defmodule Echsx.Http do
   @default_api_url "https://echs.e-clearing.net/service/ochp/v1.4"
 
   defp create_soap_header() do
-    {:"soapenv:Header", nil, [
+    {:"SOAP:Header", nil, [
       {:"wsse:Security", ["xmlns:wsse": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "xmlns:wsu": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"], [
         {:"wsse:UsernameToken", nil, [
           {:"wsse:Username", nil, Config.get_env(:echsx, :username)},
@@ -38,9 +38,9 @@ defmodule Echsx.Http do
     url = Config.get_env(:echsx, :api_url, @default_api_url)
     headers = @headers
 
-    body = {:"soapenv:Envelope", ["xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:ns": "http://ochp.eu/1.4"], [
+    body = {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:ns": "http://ochp.eu/1.4"], [
         create_soap_header(),
-        {:"soapenv:Body", nil, [
+        {:"SOAP:Body", nil, [
           {:"ns:GetChargePointListRequest", nil, nil}
         ]}
       ]
@@ -66,9 +66,9 @@ defmodule Echsx.Http do
     url = Config.get_env(:echsx, :api_url, @default_api_url)
     headers = @headers
 
-    body = {:"soapenv:Envelope", ["xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:ns": "http://ochp.eu/1.4"], [
+    body = {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:ns": "http://ochp.eu/1.4"], [
         create_soap_header(),
-        {:"soapenv:Body", nil, [
+        {:"SOAP:Body", nil, [
           {:"OCHP:GetStatusRequest", nil, nil}
         ]}
       ]
