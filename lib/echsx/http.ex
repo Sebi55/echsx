@@ -11,16 +11,22 @@ defmodule Echsx.Http do
   ]
 
   @default_api_url "https://echs.e-clearing.net/service/ochp/v1.4"
+  @default_live_api_url "https://echs.e-clearing.net/live/ochp/v1.4"
 
   defp create_soap_header() do
     {:"SOAP:Header", nil, [
-      {:"WSSE:Security", ["xmlns:WSSE": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-WSSEcurity-secext-1.0.xsd", "xmlns:wsu": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-WSSEcurity-utility-1.0.xsd"], [
+      {:"WSSE:Security", ["xmlns:WSSE": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "xmlns:wsu": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"], [
         {:"WSSE:UsernameToken", nil, [
           {:"WSSE:Username", nil, Config.get_env(:echsx, :username)},
           {:"WSSE:Password", ["Type": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"], Config.get_env(:echsx, :password)}
         ]}
       ]}
     ]}
+  end
+
+  defp create_http_headers(action) do
+    @headers
+    |> List.insert_at(-1, {"SOAPAction", "http://ochp.e-clearing.net/service/" <> action})
   end
 
   defp handle_result(result) do
@@ -63,8 +69,8 @@ defmodule Echsx.Http do
   @spec get_charge_point_status_request(timeout: integer) :: {:ok, map} | {:error, [atom]}
   def get_charge_point_status_request(options \\ []) do
     timeout = options[:timeout] || Config.get_env(:echsx, :timeout, 5000)
-    url = Config.get_env(:echsx, :api_url, @default_api_url)
-    headers = @headers
+    url = Config.get_env(:echsx, :live_api_url, @default_live_api_url)
+    headers = create_http_headers("GetStatus")
 
     body = {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:OCHP": "http://ochp.eu/1.4"], [
         create_soap_header(),
@@ -72,9 +78,10 @@ defmodule Echsx.Http do
           {:"OCHP:GetStatusRequest", nil, nil}
         ]}
       ]
-    } |> XmlBuilder.generate()
+    } |> XmlBuilder.generate(format: :none)
 
     Logger.info inspect body
+    Logger.info inspect headers
 
     result =
       with {:ok, response} <-
