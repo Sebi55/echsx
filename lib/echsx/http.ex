@@ -14,10 +14,10 @@ defmodule Echsx.Http do
 
   defp create_soap_header() do
     {:"SOAP:Header", nil, [
-      {:"wsse:Security", ["xmlns:wsse": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "xmlns:wsu": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"], [
-        {:"wsse:UsernameToken", nil, [
-          {:"wsse:Username", nil, Config.get_env(:echsx, :username)},
-          {:"wsse:Password", ["Type": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"], Config.get_env(:echsx, :password)}
+      {:"WSSE:Security", ["xmlns:WSSE": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-WSSEcurity-secext-1.0.xsd", "xmlns:wsu": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-WSSEcurity-utility-1.0.xsd"], [
+        {:"WSSE:UsernameToken", nil, [
+          {:"WSSE:Username", nil, Config.get_env(:echsx, :username)},
+          {:"WSSE:Password", ["Type": "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"], Config.get_env(:echsx, :password)}
         ]}
       ]}
     ]}
@@ -66,13 +66,13 @@ defmodule Echsx.Http do
     url = Config.get_env(:echsx, :api_url, @default_api_url)
     headers = @headers
 
-    body = {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:ns": "http://ochp.eu/1.4"], [
+    body = {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:OCHP": "http://ochp.eu/1.4"], [
         create_soap_header(),
         {:"SOAP:Body", nil, [
           {:"OCHP:GetStatusRequest", nil, nil}
         ]}
       ]
-    } |> XmlBuilder.generate(format: :none)
+    } |> XmlBuilder.generate()
 
     Logger.info inspect body
 
