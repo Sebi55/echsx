@@ -32,7 +32,7 @@ defmodule Echsx.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpoison, :eex, :xml_builder]]
+    [applications: [:logger, :httpoison, :eex, :xml_builder, :elixir_xml_to_map]]
   end
 
   defp description do
@@ -48,7 +48,8 @@ defmodule Echsx.Mixfile do
       {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
       {:ex_doc, "0.19.3", only: :dev},
       {:dialyxir, "~> 0.5", only: [:dev]},
-      {:excoveralls, "~> 0.7.1", only: :test}
+      {:excoveralls, "~> 0.7.1", only: :test},
+      {:elixir_xml_to_map, "~> 2.0"}
     ]
   end
 

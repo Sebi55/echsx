@@ -29,9 +29,13 @@ defmodule Echsx.Http do
     |> List.insert_at(-1, {"SOAPAction", "http://ochp.e-clearing.net/service/" <> action})
   end
 
+  defp transform_data(data) do
+    XmlToMap.naive_map(data)
+  end
+
   defp handle_result(result) do
     case result do
-      {:ok, data} -> {:ok, data}
+      {:ok, data} -> transform_data(data)
       {:error, :invalid} -> {:error, [:invalid_api_response]}
       {:error, {:invalid, _reason}} -> {:error, [:invalid_api_response]}
       {:error, %{reason: reason}} -> {:error, [reason]}
@@ -80,17 +84,12 @@ defmodule Echsx.Http do
       ]
     } |> XmlBuilder.generate(format: :none)
 
-    Logger.info inspect body
-    Logger.info inspect headers
-
     result =
       with {:ok, response} <-
             HTTPoison.post(url, body, headers, timeout: timeout),
           {:ok, data} <- response.body do
         {:ok, data}
       end
-
-    Logger.info inspect result
 
     handle_result result
   end
