@@ -84,10 +84,13 @@ defmodule Echsx.Http do
       ]
     } |> XmlBuilder.generate(format: :none)
 
-    result = HTTPoison.post(url, body, headers, timeout: timeout)
-
-      Logger.info inspect result
-
-    handle_result result
+    with
+        {:ok, response} <- HTTPoison.post(url, body, headers, timeout: timeout),
+        {:ok, data} <- response.body
+    do
+      handle_result {:ok, data}
+    else
+      _ -> handle_result {:error, response}
+    end
   end
 end
