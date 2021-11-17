@@ -39,7 +39,12 @@ defmodule Echsx.Http do
       {:error, :invalid} -> {:error, [:invalid_api_response]}
       {:error, {:invalid, _reason}} -> {:error, [:invalid_api_response]}
       {:error, %{reason: reason}} -> {:error, [reason]}
+      data -> {:ok, transform_data(data)}
     end
+  end
+
+  defp wrap_in_envelope(body) do
+    {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:OCHP": "http://ochp.eu/1.4"], body }
   end
 
   @spec get_charge_point_list_request(timeout: integer) :: {:ok, map} | {:error, [atom]}
@@ -48,13 +53,13 @@ defmodule Echsx.Http do
     url = Config.get_env(:echsx, :api_url, @default_api_url)
     headers = @headers
 
-    body = {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:ns": "http://ochp.eu/1.4"], [
+    body = [
         create_soap_header(),
         {:"SOAP:Body", nil, [
           {:"ns:GetChargePointListRequest", nil, nil}
         ]}
       ]
-    } |> XmlBuilder.generate(format: :none)
+    |> wrap_in_envelope |> XmlBuilder.generate(format: :none)
 
     Logger.info inspect body
 
@@ -76,21 +81,21 @@ defmodule Echsx.Http do
     url = Config.get_env(:echsx, :live_api_url, @default_live_api_url)
     headers = create_http_headers("GetStatus")
 
-    body = {:"SOAP:Envelope", ["xmlns:SOAP": "http://schemas.xmlsoap.org/soap/envelope/", "xmlns:OCHP": "http://ochp.eu/1.4"], [
+    body = [
         create_soap_header(),
         {:"SOAP:Body", nil, [
           {:"OCHP:GetStatusRequest", nil, nil}
         ]}
       ]
-    } |> XmlBuilder.generate(format: :none)
+    |> wrap_in_envelope |> XmlBuilder.generate(format: :none)
 
-    with
-        {:ok, response} <- HTTPoison.post(url, body, headers, timeout: timeout),
-        {:ok, data} <- response.body
-    do
-      handle_result {:ok, data}
-    else
-      _ -> handle_result {:error, response}
-    end
+    result =
+      with {:ok, response} <-
+            HTTPoison.post(url, body, headers, timeout: timeout),
+          {:ok, data} <- response.body do
+        {:ok, data}
+      end
+
+    handle_result result
   end
 end
