@@ -98,4 +98,34 @@ defmodule Echsx.Http do
 
     handle_result result
   end
+
+  def update_charge_point_sensor_status(parking_spot_id, status) do
+    timeout = options[:timeout] || Config.get_env(:echsx, :timeout, 5000)
+    url = Config.get_env(:echsx, :api_url, @default_api_url)
+    headers = create_http_headers("UpdateStatus")
+    t = DateTime.utc_now()
+    t = %{t | day: t.day + 1}
+    ttl = DateTime.to_iso8601(t)
+
+    body = [
+      create_soap_header(),
+      {:"SOAP:Body", nil, [
+        {:"ns:UpdateStatusRequest", nil, [
+          {:"ns:parking", ["status": status, "ttl": ttl], [
+            {:"ns:parkingId", nil, parking_spot_id}
+          ]}
+        ]}
+      ]}
+    ]
+    |> wrap_in_envelope |> XmlBuilder.generate(format: :none)
+
+    result =
+      with {:ok, response} <-
+            HTTPoison.post(url, body, headers, timeout: timeout),
+          {:ok, data} <- response.body do
+        {:ok, data}
+      end
+
+    handle_result result
+  end
 end
