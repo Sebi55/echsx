@@ -19,4 +19,10 @@ defmodule Echsx do
     )
   end
 
+  def update_charge_point_sensor_status(parking_spot_id, status, options \\ []) do
+    @http_client.update_charge_point_sensor_status_request(
+      parking_spot_id, status, Keyword.take(options, [:timeout])
+    )
+  end
+
 end
