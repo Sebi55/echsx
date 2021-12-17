@@ -17,8 +17,8 @@ defmodule Echsx.Http.MockClient do
   end
 
   # every other match is a pass through to the real client
-  def update_charge_point_sensor_status(parking_spot_id, status, options) do
-    send(self(), {:update_charge_point_sensor_status, parking_spot_id, status, options})
-    Http.update_charge_point_sensor_status(parking_spot_id, status, options)
+  def update_charge_point_sensor_status_request(parking_spot_id, status, options) do
+    send(self(), {:update_charge_point_sensor_status_request, parking_spot_id, status, options})
+    Http.update_charge_point_sensor_status_request(parking_spot_id, status, options)
   end
 end
