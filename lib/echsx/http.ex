@@ -102,7 +102,7 @@ defmodule Echsx.Http do
   @spec update_charge_point_sensor_status_request(any, any, nil | maybe_improper_list | map) :: any
   def update_charge_point_sensor_status_request(parking_spot_id, status, options \\ []) do
     timeout = options[:timeout] || Config.get_env(:echsx, :timeout, 5000)
-    url = Config.get_env(:echsx, :api_url, @default_api_url)
+    url = Config.get_env(:echsx, :api_url, @default_live_api_url)
     headers = create_http_headers("UpdateStatus")
     t = DateTime.utc_now()
     t = %{t | day: t.day + 1}
