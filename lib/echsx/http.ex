@@ -112,7 +112,7 @@ defmodule Echsx.Http do
       create_soap_header(),
       {:"SOAP:Body", nil, [
         {:"ns:UpdateStatusRequest", nil, [
-          {:"ns:parking", ["status": status, "ttl": ttl], [
+          {:"ns:parking", [status: status, ttl: ttl], [
             {:"ns:parkingId", nil, parking_spot_id}
           ]}
         ]}
